@@ -10,4 +10,4 @@ job 1:
   image:
     name: klakegg/hugo
     entrypoint: ["/bin/sh", "-c"]
-  script: make build
+  script: hugo
