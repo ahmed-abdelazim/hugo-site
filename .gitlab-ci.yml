@@ -25,4 +25,4 @@ job 2:
   image:
     name: klakegg/hugo
     entrypoint: ["/bin/sh", "-c"]
-  script: ls public
+  script: ls /builds/ahmed-abdelazim/hugo-site/public
