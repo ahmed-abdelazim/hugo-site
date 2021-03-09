@@ -7,5 +7,7 @@ stages:
 
 job 1:
   stage: build
-  image: klakegg/hugo
+  image:
+    name: klakegg/hugo
+    entrypoint: ["/bin/sh", "-c"]
   script: make build
