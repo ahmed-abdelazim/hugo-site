@@ -59,7 +59,7 @@ Switch CloudFront Origin:
     - aws cloudformation deploy
       --template-file ".aws/cloudfront.yml"
       --stack-name hugo-site
-      --parameter-overrides s3Url=hugo-site-${CI_COMMIT_SHORT_SHA}.s3.amazonaws.com
+      --parameter-overrides s3Url=hhugo-site-${CI_COMMIT_SHORT_SHA}.s3-website-us-west-2.amazonaws.com
       --tags project=hugo-site
 
 
