@@ -1,0 +1,11 @@
+stages:
+  - build
+#  - deploy
+#  - test
+#  - move
+#  - clean
+
+job 1:
+  stage: build
+  image: klakegg/hugo
+  script: hugo
