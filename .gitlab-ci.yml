@@ -28,10 +28,10 @@ job 2:
     entrypoint: ["/bin/sh", "-c"]
   script: 
     - cd /builds/$CI_PROJECT_PATH
-    - aws cloudformation deploy \
-      --template-file .aws/s3.yml \
-      --tags project=hugo-site \
-      --stack-name hugo-site-${CI_COMMIT_REF_SLUG} \
+    - aws cloudformation deploy
+      --template-file .aws/s3.yml
+      --tags project=hugo-site
+      --stack-name hugo-site-${CI_COMMIT_REF_SLUG}
       --parameter-overrides ID="${CI_COMMIT_REF_SLUG}"
     - aws cloudformation wait stack-create-complete --stack-name  hugo-site-${CI_COMMIT_REF_SLUG}
     - aws s3 sync dist s3://hugo-site-${CI_COMMIT_REF_SLUG} --acl public-read
