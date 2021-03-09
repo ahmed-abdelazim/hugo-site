@@ -8,5 +8,4 @@ stages:
 job 1:
   stage: build
   image: klakegg/hugo
-    - entrypoint: /bin/sh
-  script: hugo
+  script: make build
