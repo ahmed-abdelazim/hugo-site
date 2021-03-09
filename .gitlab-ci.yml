@@ -26,6 +26,7 @@ job 2:
   image:
     name: amazon/aws-cli
     entrypoint: ["/bin/sh", "-c"]
-  script: ls /builds/ahmed-abdelazim/hugo-site/public
-  script: aws s3 ls
-  script: echo $CI_PROJECT_PATH
+  script: 
+    - cd /builds/$CI_PROJECT_PATH/public
+    - ls
+    - aws s3 ls
