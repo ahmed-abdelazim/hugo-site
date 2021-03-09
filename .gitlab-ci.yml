@@ -1,12 +1,12 @@
 stages:
   - build
   - infra
-#  - deploy
+  - deploy
 #  - test
 #  - move
-#  - clean
+  - clean
 
-job 1:
+Build the site:
   stage: build
   cache:
     key: ${CI_COMMIT_SHORT_SHA}
@@ -17,7 +17,7 @@ job 1:
     entrypoint: ["/bin/sh", "-c"]
   script: hugo
   
-job 2:
+Create infrastructure:
   stage: infra
   cache:
     key: ${CI_COMMIT_SHORT_SHA}
@@ -26,6 +26,7 @@ job 2:
   image:
     name: amazon/aws-cli
     entrypoint: ["/bin/sh", "-c"]
+  create_infra:  
   script: 
     - cd /builds/$CI_PROJECT_PATH
     - aws cloudformation deploy
@@ -35,3 +36,32 @@ job 2:
       --parameter-overrides ID="${CI_COMMIT_SHORT_SHA}"
     - aws cloudformation wait stack-create-complete --stack-name  hugo-site-${CI_COMMIT_SHORT_SHA}
     - aws s3 sync public s3://hugo-site-${CI_COMMIT_SHORT_SHA} --acl public-read
+
+deploy:
+  stage: deploy
+  cache:
+    key: ${CI_COMMIT_SHORT_SHA}
+    paths:
+      - public/
+  image:
+    name: amazon/aws-cli
+    entrypoint: ["/bin/sh", "-c"]
+  create_infra:  
+  script: 
+    - cd /builds/$CI_PROJECT_PATH
+    - aws s3 sync public s3://hugo-site-${CI_COMMIT_SHORT_SHA} --acl public-read
+
+Clean old S3 buckets:
+  stage: clean
+  cache:
+    key: ${CI_COMMIT_SHORT_SHA}
+    paths:
+      - public/
+  image:
+    name: amazon/aws-cli
+    entrypoint: ["/bin/sh", "-c"]
+  create_infra:  
+  script: 
+    - yes | aws s3 ls | awk '{print $3}' | grep hugo-site | grep -v ${CI_COMMIT_SHORT_SHA} | xargs -I{} aws s3 rb s3://{} --force || true
+    - yes | aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE --output text | awk '{print $5}' | grep hugo-site | grep -v hugo-site-${CI_COMMIT_SHORT_SHA} | xargs -I{} aws cloudformation delete-stack --stack-name {} || true
+
