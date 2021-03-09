@@ -58,7 +58,6 @@ Clean old S3 buckets:
   image:
     name: amazon/aws-cli
     entrypoint: ["/bin/sh", "-c"]
-  create_infra:  
   script: 
     - yes | aws s3 ls | awk '{print $3}' | grep hugo-site | grep -v ${CI_COMMIT_SHORT_SHA} | xargs -I{} aws s3 rb s3://{} --force || true
     - yes | aws cloudformation list-stacks --stack-status-filter CREATE_COMPLETE --output text | awk '{print $5}' | grep hugo-site | grep -v hugo-site-${CI_COMMIT_SHORT_SHA} | xargs -I{} aws cloudformation delete-stack --stack-name {} || true
