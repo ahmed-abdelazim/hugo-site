@@ -28,3 +28,4 @@ job 2:
     entrypoint: ["/bin/sh", "-c"]
   script: ls /builds/ahmed-abdelazim/hugo-site/public
   script: aws s3 ls
+  script: echo $CI_PROJECT_PATH
