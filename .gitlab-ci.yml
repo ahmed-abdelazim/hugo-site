@@ -9,7 +9,7 @@ stages:
 job 1:
   stage: build
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_SHORT_SHA}
     paths:
       - public/
   image:
@@ -20,7 +20,7 @@ job 1:
 job 2:
   stage: infra
   cache:
-    key: ${CI_COMMIT_REF_SLUG}
+    key: ${CI_COMMIT_SHORT_SHA}
     paths:
       - public/
   image:
@@ -31,7 +31,7 @@ job 2:
     - aws cloudformation deploy
       --template-file .aws/s3.yml
       --tags project=hugo-site
-      --stack-name hugo-site-${CI_COMMIT_REF_SLUG}
-      --parameter-overrides ID="${CI_COMMIT_REF_SLUG}"
-    - aws cloudformation wait stack-create-complete --stack-name  hugo-site-${CI_COMMIT_REF_SLUG}
-    - aws s3 sync dist s3://hugo-site-${CI_COMMIT_REF_SLUG} --acl public-read
+      --stack-name hugo-site-${CI_COMMIT_SHORT_SHA}
+      --parameter-overrides ID="${CI_COMMIT_SHORT_SHA}"
+    - aws cloudformation wait stack-create-complete --stack-name  hugo-site-${CI_COMMIT_SHORT_SHA}
+    - aws s3 sync public s3://hugo-site-${CI_COMMIT_SHORT_SHA} --acl public-read
