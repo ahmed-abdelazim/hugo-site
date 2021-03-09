@@ -1,5 +1,6 @@
 stages:
   - build
+  - infra
 #  - deploy
 #  - test
 #  - move
@@ -17,12 +18,12 @@ job 1:
   script: hugo
   
 job 2:
-  stage: build
+  stage: infra
   cache:
     key: ${CI_COMMIT_REF_SLUG}
     paths:
       - public/
   image:
-    name: klakegg/hugo
+    name: amazon/aws-cli
     entrypoint: ["/bin/sh", "-c"]
   script: ls /builds/ahmed-abdelazim/hugo-site/public
