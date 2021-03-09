@@ -27,3 +27,4 @@ job 2:
     name: amazon/aws-cli
     entrypoint: ["/bin/sh", "-c"]
   script: ls /builds/ahmed-abdelazim/hugo-site/public
+  script: aws s3 ls
