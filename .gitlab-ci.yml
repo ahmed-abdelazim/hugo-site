@@ -3,7 +3,7 @@ stages:
   - infra
   - deploy
 #  - test
-#  - move
+  - move
   - clean
 
 Build the site:
@@ -48,6 +48,21 @@ deploy:
   script: 
     - cd /builds/$CI_PROJECT_PATH
     - aws s3 sync public s3://hugo-site-${CI_COMMIT_SHORT_SHA} --acl public-read
+
+Swithc CloudFront Origin:
+  stage: move
+  image:
+    name: amazon/aws-cli
+    entrypoint: ["/bin/sh", "-c"]
+  script:
+    - cd /builds/$CI_PROJECT_PATH
+    - aws cloudformation deploy
+      --template-file ".aws/s3.yml"
+      --stack-name hugo-site
+      --parameter-overrides s3Url=hugo-site-${CI_COMMIT_SHORT_SHA}.s3.amazonaws.com
+      --tags project=hugo-site
+
+
 
 Clean old S3 buckets:
   stage: clean
